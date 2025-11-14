@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UsersRepository userRepository; // <-- du package com.backend…
+    private final UsersRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
-        return userRepository.findByMail(mail)
-                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé : " + mail));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByMail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé : " + username));
     }
 }
