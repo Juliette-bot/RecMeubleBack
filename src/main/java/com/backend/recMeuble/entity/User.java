@@ -14,8 +14,8 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "user") // ou le vrai nom de ta table
-@Data
+@Table(name = "users") // ou le vrai nom de ta table
+@Data // ceer les setteur et le getteur automatiquement
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -58,7 +58,7 @@ public class User implements UserDetails {
 
     /* ====== UserDetails ====== */
 
-    @Override
+    @Override //
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
