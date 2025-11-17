@@ -33,12 +33,38 @@ public class Address {
     @Column(nullable = false)
     private String zipcode;
 
-    //@Column(name = "api_id")
-   // private String apiId; // identifiant externe (optionnel)
-
     @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", insertable = false, updatable = false)
     private LocalDateTime updatedAt;
+
+    // 🟢 Label pour affichage côté front
+    public String getDisplayLabel() {
+        StringBuilder sb = new StringBuilder();
+
+        if (streetNumber != null && !streetNumber.isBlank()) {
+            sb.append(streetNumber).append(" ");
+        }
+
+        if (streetName != null && !streetName.isBlank()) {
+            sb.append(streetName);
+        }
+
+        if (zipcode != null && !zipcode.isBlank()) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+            sb.append(zipcode);
+        }
+
+        if (city != null && city.getName() != null && !city.getName().isBlank()) {
+            if (sb.length() > 0) {
+                sb.append(" ");
+            }
+            sb.append(city.getName());
+        }
+
+        return sb.toString();
+    }
 }

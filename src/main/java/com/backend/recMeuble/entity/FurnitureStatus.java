@@ -6,5 +6,4 @@ public enum FurnitureStatus {
     PUBLISHED,
     REJECTED,
     SOLD,
-    ARCHIVED,
 }

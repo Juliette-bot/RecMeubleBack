@@ -2,33 +2,32 @@ package com.backend.recMeuble.DTO;
 
 import com.backend.recMeuble.entity.Furniture;
 import java.math.BigDecimal;
+import java.util.List;
 
 public record FurnitureResponse(
         Integer id,
         String name,
         String description,
-        BigDecimal price,
         BigDecimal height,
         BigDecimal width,
-        String typeName,
-        String cityName,
-        String zipcode,
-        String status
+        BigDecimal price,
+        String status,
+        List<PictureResponse> pictures
 ) {
-    public static FurnitureResponse fromEntity(Furniture f) {
+    public static FurnitureResponse fromEntity(Furniture furniture) {
         return new FurnitureResponse(
-                f.getId(),
-                f.getName(),
-                f.getDescription(),
-                f.getPrice(),
-                f.getHeight(),
-                f.getWidth(),
-                f.getType() != null ? f.getType().getName() : null,
-                (f.getAddress() != null && f.getAddress().getCity() != null)
-                        ? f.getAddress().getCity().getName()
-                        : null,
-                f.getAddress() != null ? f.getAddress().getZipcode() : null,
-                f.getStatus() != null ? f.getStatus().name() : null
+                furniture.getId(),
+                furniture.getName(),
+                furniture.getDescription(),
+                furniture.getHeight(),
+                furniture.getWidth(),
+                furniture.getPrice(),
+                furniture.getStatus().name(),
+                furniture.getPictures() != null
+                        ? furniture.getPictures().stream()
+                        .map(PictureResponse::fromEntity)
+                        .toList()
+                        : List.of()
         );
     }
 }

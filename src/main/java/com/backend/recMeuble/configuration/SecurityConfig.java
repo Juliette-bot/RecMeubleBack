@@ -27,22 +27,39 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
         this.jwtFilter = jwtFilter;
     }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .cors(c -> c.disable()) // proxy Vite en dev → pas besoin de CORS ici
+        http
+                .cors(c -> c.disable())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/login", "/api/register", "/api/furniture", "/api/furniture/{id}").permitAll()
+
+                        // 🔓 routes publiques (sans auth)
+                        .requestMatchers(
+                                "/api/login",
+                                "/api/register",
+                                "/api/furniture",
+                                "/api/furniture/**",
+                                "/uploads/**",
+                                "/error"
+                        ).permitAll()
+
+                        // 🔐 routes "mes meubles" → il faut être USER
+                        .requestMatchers("/api/my/**").hasRole("USER")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        // le reste → auth obligatoire
                         .anyRequest().authenticated()
-                )
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                );
+
+        http.authenticationProvider(authenticationProvider());
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
+
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

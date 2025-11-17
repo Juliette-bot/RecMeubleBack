@@ -45,6 +45,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
+    private List<Furniture> furniture;
+
     @Column(name = "address_id")
     private Integer address_id;   // <-- au lieu de Long
 
