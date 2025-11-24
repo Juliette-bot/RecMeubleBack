@@ -1,5 +1,6 @@
 package com.backend.recMeuble.entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +32,9 @@ public class Furniture {
     private FurnitureType type;
 
     @Column(nullable = false)
+    @JsonView
     private String description;
+
 
     @Column(nullable = false)
     private BigDecimal height;

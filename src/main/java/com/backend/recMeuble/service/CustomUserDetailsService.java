@@ -54,7 +54,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         if (dto.getFirstName() != null) user.setFirstname(dto.getFirstName());
         if (dto.getLastName() != null) user.setLastname(dto.getLastName());
-        if (dto.getMail() != null) user.setMail((dto.getMail());
+        if (dto.getMail() != null) user.setMail(dto.getMail());
         if (dto.getPassword() != null) user.setPassword(dto.getPassword());
 
         return userRepository.save(user);

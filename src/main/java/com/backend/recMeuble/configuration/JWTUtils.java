@@ -1,18 +1,18 @@
 package com.backend.recMeuble.configuration;
 
+import com.backend.recMeuble.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.*;
-        import java.util.function.Function;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,18 +27,15 @@ public class JWTUtils {
     // ====== PUBLIC API ======
 
     /** Génère un JWT (subject = username = mail) avec claim "roles". */
-    public String generateToken(UserDetails userDetails) {
+    // ✅ MEILLEUR : avec l'entité User
+    public String generateToken(User user) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", user.getId());
 
-        // Ex: authorities Spring = ["ROLE_ADMIN","ROLE_USER"] -> ["ADMIN","USER"]
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(a -> a.startsWith("ROLE_") ? a.substring(5) : a)
-                .collect(Collectors.toList());
-
+        List<String> roles = List.of(user.getRole().name());
         claims.put("roles", roles);
 
-        return createToken(claims, userDetails.getUsername());
+        return createToken(claims, user.getMail());
     }
 
 
