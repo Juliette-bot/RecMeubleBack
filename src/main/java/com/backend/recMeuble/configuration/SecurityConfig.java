@@ -46,10 +46,11 @@ public class SecurityConfig {
                                 "/error"
                         ).permitAll()
 
-                        // 🔐 routes "mes meubles" → il faut être USER
-                        .requestMatchers("/api/my/**").hasRole("USER")
+                        // ADMIN
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        // le reste → auth obligatoire
+                        // USER
+                        .requestMatchers("/api/my/**").hasRole("USER")
+
                         .anyRequest().authenticated()
                 );
 

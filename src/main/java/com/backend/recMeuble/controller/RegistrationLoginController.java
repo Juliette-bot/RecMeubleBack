@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,22 +73,20 @@ public class RegistrationLoginController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody AuthRequest req) {
         try {
-            // 1) Authentifie (lévera BadCredentialsException si mdp invalide)
+            // 1) Authentifie (lèvera BadCredentialsException si mdp invalide)
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(req.mail(), req.password())
             );
 
-            // 2) Recharge depuis la BDD (source de vérité) → récupère authorities/roles
-            UserDetails ud = userDetailsService.loadUserByUsername(req.mail());
+            // 2) Récupère l'entité User complète depuis la BDD
+            User user = userRepository.findByMail(req.mail())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // 3) Génère le token avec claim "roles" basé sur les authorities
-            String token = jwtUtils.generateToken(ud);
+            // 3) Génère le token avec l'entité User (contient l'ID + rôle)
+            String token = jwtUtils.generateToken(user);
 
-            // 4) Expose le rôle principal pour l’UI (optionnel mais pratique)
-            String role = ud.getAuthorities().stream()
-                    .map(a -> a.getAuthority())           // "ROLE_ADMIN"
-                    .map(a -> a.startsWith("ROLE_") ? a.substring(5) : a) // "ADMIN"
-                    .findFirst().orElse(User.Role.USER.name());
+            // 4) Expose le rôle pour l'UI
+            String role = user.getRole().name();
 
             log.info("🔐 Connexion OK pour {}", req.mail());
             return ResponseEntity.ok(new AuthResponse(token, role));
