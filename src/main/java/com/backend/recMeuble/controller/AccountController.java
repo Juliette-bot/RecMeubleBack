@@ -1,5 +1,6 @@
 package com.backend.recMeuble.controller;
 
+import com.backend.recMeuble.DTO.UserProfileDto;
 import com.backend.recMeuble.DTO.UserUpdateDto;
 import com.backend.recMeuble.entity.User;
 import com.backend.recMeuble.service.CustomUserDetailsService;
@@ -17,13 +18,13 @@ public class AccountController {
     @GetMapping
     public ResponseEntity<User> getCurrentUser() {
         // éventuellement renvoyer un DTO plutôt que l’entité entière
-        User user = userService.getCurrentUserPublic();
+        User user = userService.getCurrentUser();
         return ResponseEntity.ok(user);
     }
 
     @PutMapping
-    public ResponseEntity<User> updateCurrentUser(@RequestBody UserUpdateDto dto) {
-        User updated = userService.updateCurrentUser(dto);
+    public ResponseEntity<UserProfileDto> updateCurrentUser(@RequestBody UserUpdateDto dto) {
+        UserProfileDto updated = userService.updateCurrentUser(dto);
         return ResponseEntity.ok(updated);
     }
 

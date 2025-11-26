@@ -46,9 +46,13 @@ public class SecurityConfig {
                                 "/error"
                         ).permitAll()
 
-                        // ADMIN
+                        // 👤 Gestion de profil (accessible aux USER et ADMIN)
+                        .requestMatchers("/api/user/**").authenticated()
+
+                        // 🔐 ADMIN uniquement
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        // USER
+
+                        // 🔐 USER uniquement
                         .requestMatchers("/api/my/**").hasRole("USER")
 
                         .anyRequest().authenticated()
@@ -59,7 +63,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
 
     @Bean
