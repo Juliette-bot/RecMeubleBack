@@ -3,10 +3,7 @@ package com.backend.recMeuble.controller;
 import com.backend.recMeuble.DTO.MyFurnitureRequest;
 import com.backend.recMeuble.DTO.MyFurnitureResponse;
 import com.backend.recMeuble.DTO.PictureResponse;
-import com.backend.recMeuble.entity.Address;
-import com.backend.recMeuble.entity.Furniture;
-import com.backend.recMeuble.entity.FurnitureStatus;
-import com.backend.recMeuble.entity.FurnitureType;
+import com.backend.recMeuble.entity.*;
 import com.backend.recMeuble.mapper.MyFurnitureMapper;
 import com.backend.recMeuble.repository.AddressRepository;
 import com.backend.recMeuble.repository.FurnitureTypeRepository;
@@ -109,6 +106,8 @@ public class MyFurnitureController {
     public MyFurnitureResponse updateMyFurniture(@PathVariable Integer id,
                                                  @RequestBody MyFurnitureRequest request) {
 
+        //User current = currentUserService.getCurrentUser(); furniture.getseller est different que getcurrentuser
+            // recupere tout la furniture ici verif le user via le  mail, find by seller
         FurnitureType type = furnitureTypeRepository.findById(request.getTypeId())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.BAD_REQUEST, "Type de meuble invalide"));
